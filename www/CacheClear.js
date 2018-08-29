@@ -6,8 +6,13 @@
 
 var exec = require('cordova/exec');
 
-var CacheClear = function (success, error) {
-    exec(success, error, 'CacheClear', 'task', []);
+var CacheClear = function (success, error, includeDiskFiles) {
+    if (includeDiskFiles) {
+        exec(success, error, 'CacheClear', 'task', [includeDiskFiles]);
+    }
+    else {
+        exec(success, error, 'CacheClear', 'task', []);
+    }
 };
 
 module.exports = CacheClear;

@@ -19,21 +19,27 @@ public class CacheClear extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("task")) {
             Log.v(LOG_TAG, "Cordova Android CacheClear() called.");
-            task(callbackContext);
+            if (args.length() > 0) {
+                task(callbackContext, args.getBoolean(0));
+            }
+            else {
+                task(callbackContext, false);
+            }
             return true;
         }
         return false;
     }
 
-    public void task(CallbackContext callbackContext) {
+    public void task(CallbackContext callbackContext, boolean includeDiskFiles) {
         final CacheClear self = this;
         final CallbackContext callback = callbackContext;
+        final boolean deep = includeDiskFiles;
 
         cordova.getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 try {
                     // clear the cache
-                    self.webView.clearCache(true);
+                    self.webView.clearCache(deep);
                     // send success result to cordova
                     PluginResult result = new PluginResult(PluginResult.Status.OK);
                     result.setKeepCallback(false);
